@@ -31,7 +31,11 @@ public class SocketHandle extends Thread {
                 //使用线程处理收到的请求
                 new HttpConnectThread(client).start();
             } catch (Exception e) {
-                e.printStackTrace();
+                System.err.println(this.getClass().getName() +
+                                   " : " +
+                                   Thread.currentThread().getStackTrace()[1].getMethodName() +
+                                   " : " +
+                                   e.getMessage());
             }
         }
     }

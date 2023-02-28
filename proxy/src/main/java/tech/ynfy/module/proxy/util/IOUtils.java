@@ -21,7 +21,11 @@ public class IOUtils {
                     try {
                         closeables[i].close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        System.err.println(Thread.currentThread().getStackTrace()[1].getClassName() +
+                                           " : " +
+                                           Thread.currentThread().getStackTrace()[1].getMethodName() +
+                                           " : " +
+                                           e.getMessage());
                     }
                 }
             }

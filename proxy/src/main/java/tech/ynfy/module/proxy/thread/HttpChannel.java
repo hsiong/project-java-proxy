@@ -34,7 +34,11 @@ public class HttpChannel extends Thread {
                 out.flush();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+                            System.err.println(this.getClass().getName() +
+                                   " : " +
+                                   Thread.currentThread().getStackTrace()[1].getMethodName() +
+                                   " : " +
+                                   e.getMessage());
         } finally {
             IOUtils.close(in, out);
             countDownLatch.countDown();

@@ -57,8 +57,9 @@ public class HttpConnectThread extends Thread {
                         // 从所读数据中取域名和端口号
                         parseServerHost("http://([^/]+)/");
                     }
-                    if (host != null) {
+                    if (host != null & this.socketPort != null) {
                         server = new Socket(socketHost, this.socketPort);
+                        System.out.println("clientInputString: " + clientInputString);
                         // 根据读到的域名和端口号建立套接字
                         serverInputStream = new DataInputStream(server.getInputStream());
                         serverOutputStream = new DataOutputStream(server.getOutputStream());
@@ -74,7 +75,11 @@ public class HttpConnectThread extends Thread {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+                            System.err.println(this.getClass().getName() +
+                                   " : " +
+                                   Thread.currentThread().getStackTrace()[1].getMethodName() +
+                                   " : " +
+                                   e.getMessage());
         } finally {
             IOUtils.close(serverInputStream, serverOutputStream, server, clientInputStream, clientOutputStream, client);
         }
@@ -95,9 +100,9 @@ public class HttpConnectThread extends Thread {
                 socketHost = host.substring(0, host.indexOf(":"));
             }
         }
-        // 转发
-        if (socketHost.contains("139")) {
-            socketHost = socketHost.replace("139", "151");
+        if (socketHost != null && socketHost.contains("37")) {
+            // 转发
+//            socketHost = socketHost.replace("139", "151");
         }
     }
 
@@ -119,9 +124,9 @@ public class HttpConnectThread extends Thread {
         }
         // 建立线程 , 用于从外网读数据 , 并返回给内网
         new HttpChannel(serverInputStream, clientOutputStream, latch).start();
-        latch.await(120, TimeUnit.SECONDS);
+        latch.await(5, TimeUnit.SECONDS);
         IOUtils.close(serverInputStream, serverOutputStream, server, clientInputStream, clientOutputStream, client);
-        System.out.println("请求地址：" + clientInputString + "，耗时：" + (System.currentTimeMillis() - createTime) + "ms");
+        System.out.println("耗时：" + (System.currentTimeMillis() - createTime) + "ms; clientInputString " + clientInputString);
     }
 
     /**
