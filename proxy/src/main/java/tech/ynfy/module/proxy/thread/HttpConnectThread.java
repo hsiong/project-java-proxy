@@ -124,7 +124,7 @@ public class HttpConnectThread extends Thread {
         }
         // 建立线程 , 用于从外网读数据 , 并返回给内网
         new HttpChannel(serverInputStream, clientOutputStream, latch).start();
-        latch.await(5, TimeUnit.SECONDS);
+        latch.await(2, TimeUnit.SECONDS);
         IOUtils.close(serverInputStream, serverOutputStream, server, clientInputStream, clientOutputStream, client);
         System.out.println("耗时：" + (System.currentTimeMillis() - createTime) + "ms; clientInputString " + clientInputString);
     }
